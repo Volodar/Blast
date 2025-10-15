@@ -4660,8 +4660,8 @@
       "__id__": 38
     },
     "tileSize": 100,
-    "rows": 5,
-    "cols": 5,
+    "rows": 8,
+    "cols": 8,
     "window_lose": {
       "__id__": 50
     },
@@ -4680,8 +4680,8 @@
     "boosters_count_bomb": {
       "__id__": 26
     },
-    "moves": 99,
-    "goal_scores": 100,
+    "moves": 20,
+    "goal_scores": 500,
     "popupFont": {
       "__uuid__": "bfb2d25e-af46-4595-aa01-0a138ab55a9f"
     },
