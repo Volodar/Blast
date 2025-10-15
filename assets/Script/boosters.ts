@@ -27,16 +27,11 @@ export class BoosterSwapTile implements Booster {
             this.row_1 = row;
             this.col_1 = col;
 
-            const tile_0 = controller.model.board.grid[this.row_0][this.col_0];
-            const tile_1 = controller.model.board.grid[this.row_1][this.col_1];
+            const tile_0 = controller.getTile(this.row_0, this.col_0);
+            const tile_1 = controller.getTile(this.row_1, this.col_1);
 
-            controller.model.board.grid[this.row_0][this.col_0] = tile_1;
-            controller.model.board.grid[this.row_1][this.col_1] = tile_0;
-
-            tile_1.row = this.row_0;
-            tile_1.col = this.col_0;
-            tile_0.row = this.row_1;
-            tile_0.col = this.col_1;
+            controller.setTile(this.row_0, this.col_0, tile_1);
+            controller.setTile(this.row_1, this.col_1, tile_0);
 
             this.row_0 = -1;
             this.col_0 = -1;
@@ -47,7 +42,6 @@ export class BoosterSwapTile implements Booster {
         }
     }
 }
-
 
 export class BoosterBomb implements Booster {
     private readonly radius: number;
@@ -69,7 +63,7 @@ export class BoosterBomb implements Booster {
         const toRemove: Tile[] = [];
         for (let r = r0; r <= r1; r++) {
             for (let c = c0; c <= c1; c++) {
-                const t = board.grid[r][c];
+                const t = controller.getTile(r, c);
                 if (t) {
                     toRemove.push(t);
                 }
@@ -77,7 +71,6 @@ export class BoosterBomb implements Booster {
         }
 
         if (toRemove.length === 0) {
-            console.log('BoosterBomb toRemove.length is zero');
             return [null, null];
         }
 

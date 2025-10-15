@@ -11,12 +11,21 @@ export class GameController{
         this.createBoard(rows, cols);
     }
 
+    getScore(): number{
+        return this.model.score;
+    }
+    getGoalScore(): number{
+        return this.model.goal_score;
+    }
     setGoalScore(score: number){
         this.model.goal_score = score;
     }
 
     setMoves(moves: number){
         this.model.moves = moves;
+    }
+    getMoves(): number{
+        return this.model.moves;
     }
 
     createBoard(rows: number, cols: number){
@@ -34,6 +43,29 @@ export class GameController{
 
     public doMove(){
         this.model.moves -=1;
+    }
+
+    getTile(r: number, c: number): Tile | null {
+        if (!this.model || !this.model.board) return null;
+        if (!this.model.board.inBounds(r, c)) return null;
+        return this.model.board.grid[r][c];
+    }
+
+    setTile(r: number, c: number, tile: Tile | null): void {
+        if (!this.model || !this.model.board) return;
+        if (!this.model.board.inBounds(r, c)) return;
+        this.model.board.grid[r][c] = tile;
+        if (tile) {
+            tile.row = r;
+            tile.col = c;
+        }
+    }
+
+    getRows(): number {
+        return this.model.board.rows;
+    }
+    getCols(): number {
+        return this.model.board.cols;
     }
 
     removeGroup(group: Tile[]): number[] {
@@ -132,8 +164,12 @@ export class GameController{
         return false;
     }
 
-    shuffle(): Tile[] {
-
+    doShuffle(): Tile[] {
+        this.model.shuffle_count -= 1;
+        return this.shuffle();
+    }
+    
+    private shuffle(): Tile[] {
         for (let r = 0; r < this.model.board.rows; r++) {
             for (let c = 0; c < this.model.board.cols; c++) {
                 const tile = this.model.board.grid[r][c];
@@ -168,7 +204,6 @@ export class GameController{
     getScoreOfGroup(group: Tile[]){
         const n = group.length;
         const score = n * (n + 1) / 2;
-        console.log("Add score: ", score);
         return score;
     }
 
