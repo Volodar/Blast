@@ -204,7 +204,6 @@ export class GameController{
     getScoreOfGroup(group: Tile[]){
         const n = group.length;
         const score = n * (n + 1) / 2;
-        console.log("Add score: ", score);
         return score;
     }
 

@@ -59,7 +59,6 @@ export default class ViewBoard extends cc.Component {
         this.button_booster_bomb.on('click', this.chooseBoosterBomb, this);
     }
     start () {
-        console.log('start:');
         this.controller = new GameController(this.rows, this.cols);
         this.controller.setGoalScore(this.goal_scores);
         this.controller.setMoves(this.moves);
@@ -93,25 +92,20 @@ export default class ViewBoard extends cc.Component {
     private onTileClick(r: number, c: number) {
         const [toRemove, moved] = this.booster.action(this.controller, r, c);
         if(toRemove == null && moved == null){
-            console.log('Exit from click');
             return;
         }
 
 
         if (moved.length > 0) {
-            console.log('Swap');
             this.syncTilesToBoard(moved);
         } else {
             if (toRemove.length <= 1){
-                console.log('remove len <= 1. result');
                 return;
             }
-            console.log('remove tiles');
             this.highlightTiles(toRemove);
             this.scheduleOnce(() => this.removeTiles(toRemove), 0.15);
             this.showScorePopupAt(this.controller.getScoreOfGroup(toRemove), r, c);
         }
-        console.log('do move');
 
         this.controller.doMove();
         this.showMoves();
