@@ -64,4 +64,7 @@ export class Model {
     public goal_score: number = 0;
     public shuffle_count: number = 3;
     public board: Board = null;
+
+    public booster_count_swap = 5;
+    public booster_count_bomb = 5;
 }

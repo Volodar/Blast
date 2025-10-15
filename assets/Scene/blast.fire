@@ -339,7 +339,7 @@
   {
     "__type__": "cc.Node",
     "_name": "ui",
-    "_objFlags": 512,
+    "_objFlags": 0,
     "_parent": {
       "__id__": 2
     },
@@ -412,7 +412,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "button_booster_tp",
+    "_name": "button_booster_swap",
     "_objFlags": 0,
     "_parent": {
       "__id__": 7
@@ -507,9 +507,9 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 230,
+      "g": 230,
+      "b": 230,
       "a": 255
     },
     "_contentSize": {
@@ -745,7 +745,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Label",
+    "_name": "count",
     "_objFlags": 0,
     "_parent": {
       "__id__": 9
@@ -927,17 +927,17 @@
     },
     "_N$pressedColor": {
       "__type__": "cc.Color",
-      "r": 200,
-      "g": 200,
-      "b": 200,
-      "a": 255
+      "r": 0,
+      "g": 0,
+      "b": 0,
+      "a": 241
     },
     "pressedColor": {
       "__type__": "cc.Color",
-      "r": 200,
-      "g": 200,
-      "b": 200,
-      "a": 255
+      "r": 0,
+      "g": 0,
+      "b": 0,
+      "a": 241
     },
     "_N$hoverColor": {
       "__type__": "cc.Color",
@@ -1312,7 +1312,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Label",
+    "_name": "count",
     "_objFlags": 0,
     "_parent": {
       "__id__": 20
@@ -2600,7 +2600,7 @@
         "__id__": 62
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [],
     "_prefab": null,
     "_opacity": 255,
@@ -3608,7 +3608,7 @@
         "__id__": 81
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [],
     "_prefab": null,
     "_opacity": 255,
@@ -4660,13 +4660,25 @@
       "__id__": 38
     },
     "tileSize": 100,
-    "rows": 2,
-    "cols": 3,
+    "rows": 5,
+    "cols": 5,
     "window_lose": {
       "__id__": 50
     },
     "window_win": {
       "__id__": 69
+    },
+    "button_booster_swap": {
+      "__id__": 8
+    },
+    "button_booster_bomb": {
+      "__id__": 19
+    },
+    "boosters_count_swap": {
+      "__id__": 15
+    },
+    "boosters_count_bomb": {
+      "__id__": 26
     },
     "moves": 99,
     "goal_scores": 100,

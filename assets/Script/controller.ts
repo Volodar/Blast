@@ -32,8 +32,11 @@ export class GameController{
         return this.model.board;
     }
 
-    removeGroup(group: Tile[]): number[] {
+    public doMove(){
         this.model.moves -=1;
+    }
+
+    removeGroup(group: Tile[]): number[] {
         this.model.score += this.getScoreOfGroup(group);
 
         const removed: number[] = [];
@@ -67,8 +70,8 @@ export class GameController{
         return moved;
     }
 
-    findMatch(board: Board, r: number, c: number): Tile[] {
-        const start = board.grid[r][c];
+    findMatch(r: number, c: number): Tile[] {
+        const start = this.model.board.grid[r][c];
         if (!start) 
             return [];
         const color = start.color;
@@ -79,7 +82,7 @@ export class GameController{
         while (stack.length) {
             const [row, col] = stack.pop()!;
             
-            const index = row * board.grid.length + col
+            const index = row * this.model.board.grid.length + col
             if (visited.has(index))
                 continue;
             visited.add(index);
@@ -89,7 +92,7 @@ export class GameController{
             const neighbors: [number, number][] = [[1,0],[-1,0],[0,1],[0,-1]];
             neighbors.forEach(([dr, dc]) => {
                 const nr = row + dr, nc = col + dc;
-                if (board.inBounds(nr, nc) && board.grid[nr][nc] && board.grid[nr][nc]!.color === color) {
+                if (this.model.board.inBounds(nr, nc) && this.model.board.grid[nr][nc] && this.model.board.grid[nr][nc]!.color === color) {
                     stack.push([nr, nc]);
                 }
             });

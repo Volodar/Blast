@@ -3,6 +3,7 @@ const {ccclass, property} = cc._decorator;
 // Fix import: controller exports a named class, not default
 import { GameController } from './controller';
 import { Tile } from './models';
+import { Booster, BoosterChooseGroup, BoosterSwapTile, BoosterBomb } from './boosters';
 
 @ccclass
 export default class ViewBoard extends cc.Component {
@@ -30,6 +31,16 @@ export default class ViewBoard extends cc.Component {
     @property(cc.Node)
     window_win: cc.Node = null;
 
+    @property(cc.Node)
+    button_booster_swap: cc.Node = null;
+    @property(cc.Node)
+    button_booster_bomb: cc.Node = null;
+
+    @property(cc.Label)
+    boosters_count_swap: cc.Label = null;
+    @property(cc.Label)
+    boosters_count_bomb: cc.Label = null;
+
     @property
     moves: number = 20;
     @property
@@ -38,10 +49,14 @@ export default class ViewBoard extends cc.Component {
     private controller: GameController = null;
     private tileNodes: Map<number, cc.Node> = new Map();
     private lock_touches: boolean = false;
+    private booster: Booster = null;
+
     @property(cc.Font)
     popupFont: cc.Font = null;
 
     onLoad () {
+        this.button_booster_swap.on('click', this.chooseBoosterSwap, this);
+        this.button_booster_bomb.on('click', this.chooseBoosterBomb, this);
     }
     start () {
         console.log('start:');
@@ -51,9 +66,12 @@ export default class ViewBoard extends cc.Component {
         this.createTiles();
         this.showScore();
         this.showMoves();
+        this.resetBooster();
 
         this.window_lose.active = false;
         this.window_win.active = false;
+
+        this.showBoostersLeft();
     }
     private createTiles(){
         const root = this.root || this.node;
@@ -79,16 +97,31 @@ export default class ViewBoard extends cc.Component {
     }
 
     private onTileClick(r: number, c: number) {
-        const group = this.controller.findMatch(this.controller.model.board, r, c);
-        if (!group || group.length <= 1) 
+        const [toRemove, moved] = this.booster.action(this.controller, r, c);
+        if(toRemove == null && moved == null){
+            console.log('Exit from click');
             return;
-        this.highlightTiles(group);
-        // Show score popup at clicked tile position
-        const points = (group.length * (group.length + 1)) / 2;
-        this.scheduleOnce(() => this.removeTiles(group), 0.15);
+        }
 
-        const add_score = this.controller.getScoreOfGroup(group);
-        this.showScorePopupAt(add_score, r, c);
+
+        if (moved.length > 0) {
+            console.log('Swap');
+            this.syncTilesToBoard(moved);
+        } else {
+            if (toRemove.length <= 1){
+                console.log('remove len <= 1. result');
+                return;
+            }
+            console.log('remove tiles');
+            this.highlightTiles(toRemove);
+            this.scheduleOnce(() => this.removeTiles(toRemove), 0.15);
+            this.showScorePopupAt(this.controller.getScoreOfGroup(toRemove), r, c);
+        }
+        console.log('do move');
+
+        this.controller.doMove();
+        this.showMoves();
+        this.resetBooster();
 
     }
 
@@ -130,7 +163,6 @@ export default class ViewBoard extends cc.Component {
             this.spawnNewTiles(created);
             this.lock_touches = false;
             this.showScore();
-            this.showMoves();
             this.checkGameFinished();
         }, 0.24);
     }
@@ -287,5 +319,40 @@ export default class ViewBoard extends cc.Component {
         }
     }
 
-    // update (dt) {}
+    private showBoostersLeft(){
+        this.boosters_count_swap.string = String(this.controller.model.booster_count_swap);
+        this.boosters_count_bomb.string = String(this.controller.model.booster_count_bomb);
+    }
+
+    private chooseBoosterSwap(){
+        if(this.booster instanceof BoosterSwapTile){
+            return;
+        }
+        if(this.controller.model.booster_count_swap > 0){
+            this.booster = new BoosterSwapTile();
+            this.controller.model.booster_count_swap -= 1;
+            this.showBoostersLeft();
+            //TODO: show selected booster in UI
+        }
+    }
+
+    private chooseBoosterBomb(){
+        if(this.booster instanceof BoosterBomb){
+            return;
+        }
+        if(this.controller.model.booster_count_bomb > 0){
+            this.booster = new BoosterBomb(1);
+            this.controller.model.booster_count_bomb -= 1;
+            this.showBoostersLeft();
+            //TODO: show selected booster in UI
+        }
+    }
+
+    private resetBooster(){
+        if(this.booster instanceof BoosterChooseGroup){
+            return;
+        }
+        this.booster = new BoosterChooseGroup();
+    }
+
 }
