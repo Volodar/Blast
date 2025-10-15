@@ -77,17 +77,11 @@ export default class ViewBoard extends cc.Component {
         const root = this.root || this.node;
         root.removeAllChildren();
 
-        const controller = this.controller;
-        if (!controller || !controller.model.board) {
-            console.log('ViewBoard: controller or board is not ready');
-            return;
-        }
-
-        const rows = this.controller.model.board.rows;
-        const cols = this.controller.model.board.cols;
+        const rows = this.controller.getRows();
+        const cols = this.controller.getCols();
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols; c++) {
-                const tile = controller.model.board.grid[r][c];
+                const tile = this.controller.getTile(r, c);
                 if (!tile)
                     continue;
                 const node = this.buildTileNode(tile);
@@ -211,12 +205,11 @@ export default class ViewBoard extends cc.Component {
     }
 
     private findTilePositionById(id: number): [number, number] | null {
-        const board = this.controller.model.board;
-        const rows = this.controller.model.board.rows;
-        const cols = this.controller.model.board.cols;
+        const rows = this.controller.getRows();
+        const cols = this.controller.getCols();
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols; c++) {
-                const t = board.grid[r][c];
+                const t = this.controller.getTile(r, c);
                 if (t && t.id === id)
                     return [r, c];
             }
@@ -225,7 +218,6 @@ export default class ViewBoard extends cc.Component {
     }
 
     private syncTilesToBoard(moved: Tile[]) {
-        const controller = this.controller;
         moved.forEach(tile => {
             const node = this.tileNodes.get(tile.id);
             if (!node)
@@ -242,8 +234,8 @@ export default class ViewBoard extends cc.Component {
     }
 
     private getTilePosition(row: number, col: number): cc.Vec2 {
-        const rows = this.controller.model.board.rows;
-        const cols = this.controller.model.board.cols;
+        const rows = this.controller.getRows();
+        const cols = this.controller.getCols();
         const size = this.tileSize;
         const totalW = cols * size;
         const totalH = rows * size;
@@ -256,12 +248,12 @@ export default class ViewBoard extends cc.Component {
 
     private showScore(){
         if(this.score_text_node)
-            this.score_text_node.string = `${this.controller.model.score}/${this.controller.model.goal_score}`
+            this.score_text_node.string = `${this.controller.getScore()}/${this.controller.getGoalScore()}`
     }
 
     private showMoves(){
         if(this.moves_text_node)
-            this.moves_text_node.string = `${this.controller.model.moves}`
+            this.moves_text_node.string = `${this.controller.getMoves()}`
     }
 
 
@@ -297,8 +289,7 @@ export default class ViewBoard extends cc.Component {
             window = this.window_win;
         }
         if(!window && !this.controller.hasAnyGroup()){
-            const tiles = this.controller.shuffle();
-            this.controller.model.shuffle_count -= 1;
+            const tiles = this.controller.doShuffle();
             this.syncTilesToBoard(tiles);
         }
 
