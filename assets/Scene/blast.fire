@@ -4660,8 +4660,8 @@
       "__id__": 38
     },
     "tileSize": 100,
-    "rows": 9,
-    "cols": 9,
+    "rows": 2,
+    "cols": 3,
     "window_lose": {
       "__id__": 50
     },

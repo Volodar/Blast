@@ -136,12 +136,12 @@ export default class ViewBoard extends cc.Component {
     }
 
     private spawnNewTiles(created: Tile[]) {
-        if (!created || created.length === 0) return;
-        const root = this.root || this.node;
+        if (!created || created.length === 0)
+            return;
 
         created.forEach((tile) => {
             const node = this.buildTileNode(tile);
-            root.addChild(node, node.getPosition().y);
+            this.root.addChild(node, node.getPosition().y);
             node.opacity = 0;
             cc.tween(node).to(0.12, { opacity: 255 }).start();
         });
@@ -204,7 +204,9 @@ export default class ViewBoard extends cc.Component {
             } else {
                 node.setPosition(target);
             }
+            node.zIndex = target.y;
         });
+        this.root.sortAllChildren();
     }
 
     private getTilePosition(row: number, col: number): cc.Vec2 {
