@@ -10,7 +10,8 @@ export default class Helloworld extends cc.Component {
     text: string = 'hello';
 
     start () {
+        console.log('start:');
         // init logic
-        this.label.string = this.text;
+        this.label.string = "123";
     }
 }
